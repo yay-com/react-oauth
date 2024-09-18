@@ -21,12 +21,14 @@ export default function GoogleOAuthProvider({
   nonce,
   onScriptLoadSuccess,
   onScriptLoadError,
+  scriptSrc,
   children,
 }: GoogleOAuthProviderProps) {
   const scriptLoadedSuccessfully = useLoadGsiScript({
     nonce,
     onScriptLoadSuccess,
     onScriptLoadError,
+    scriptSrc
   });
 
   const contextValue = useMemo(

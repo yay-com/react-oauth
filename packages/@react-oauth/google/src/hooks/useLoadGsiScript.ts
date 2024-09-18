@@ -13,12 +13,13 @@ export interface UseLoadGsiScriptOptions {
    * Callback fires on load [gsi](https://accounts.google.com/gsi/client) script failure
    */
   onScriptLoadError?: () => void;
+  scriptSrc?: string;
 }
 
 export default function useLoadGsiScript(
   options: UseLoadGsiScriptOptions = {},
 ): boolean {
-  const { nonce, onScriptLoadSuccess, onScriptLoadError } = options;
+  const {nonce, onScriptLoadSuccess, onScriptLoadError, scriptSrc} = options;
 
   const [scriptLoadedSuccessfully, setScriptLoadedSuccessfully] =
     useState(false);
@@ -30,8 +31,10 @@ export default function useLoadGsiScript(
   onScriptLoadErrorRef.current = onScriptLoadError;
 
   useEffect(() => {
+    if (!scriptSrc) return () => {
+    };
     const scriptTag = document.createElement('script');
-    scriptTag.src = 'https://accounts.google.com/gsi/client';
+    scriptTag.src = scriptSrc;
     scriptTag.async = true;
     scriptTag.defer = true;
     scriptTag.nonce = nonce;
@@ -49,7 +52,7 @@ export default function useLoadGsiScript(
     return () => {
       document.body.removeChild(scriptTag);
     };
-  }, [nonce]);
+  }, [nonce, scriptSrc]);
 
   return scriptLoadedSuccessfully;
 }
